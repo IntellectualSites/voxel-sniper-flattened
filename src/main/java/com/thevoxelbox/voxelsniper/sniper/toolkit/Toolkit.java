@@ -14,91 +14,92 @@ import java.util.Map;
 
 public class Toolkit {
 
-	private static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushRegistrar.DEFAULT_BRUSH_PROPERTIES;
+    private static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushRegistrar.DEFAULT_BRUSH_PROPERTIES;
 
-	private String toolkitName;
-	private BrushProperties currentBrushProperties;
-	private BrushProperties previousBrushProperties;
-	private Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
-	private Map<BrushProperties, Brush> brushes = new HashMap<>();
-	private ToolkitProperties properties = new ToolkitProperties();
+    private final String toolkitName;
+    private final Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
+    private final Map<BrushProperties, Brush> brushes = new HashMap<>();
+    private final ToolkitProperties properties = new ToolkitProperties();
+    private BrushProperties currentBrushProperties;
+    private BrushProperties previousBrushProperties;
 
-	public Toolkit(String toolkitName) {
-		this.toolkitName = toolkitName;
-		this.currentBrushProperties = DEFAULT_BRUSH_PROPERTIES;
-		this.previousBrushProperties = DEFAULT_BRUSH_PROPERTIES;
-		createBrush(DEFAULT_BRUSH_PROPERTIES);
-	}
+    public Toolkit(String toolkitName) {
+        this.toolkitName = toolkitName;
+        this.currentBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+        this.previousBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+        createBrush(DEFAULT_BRUSH_PROPERTIES);
+    }
 
-	public void reset() {
-		this.currentBrushProperties = DEFAULT_BRUSH_PROPERTIES;
-		this.previousBrushProperties = DEFAULT_BRUSH_PROPERTIES;
-		this.brushes.clear();
-		this.properties.reset();
-		createBrush(DEFAULT_BRUSH_PROPERTIES);
-	}
+    public void reset() {
+        this.currentBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+        this.previousBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+        this.brushes.clear();
+        this.properties.reset();
+        createBrush(DEFAULT_BRUSH_PROPERTIES);
+    }
 
-	public void addToolAction(Material toolMaterial, ToolAction action) {
-		this.toolActions.put(toolMaterial, action);
-	}
+    public void addToolAction(Material toolMaterial, ToolAction action) {
+        this.toolActions.put(toolMaterial, action);
+    }
 
-	public boolean hasToolAction(Material toolMaterial) {
-		return this.toolActions.containsKey(toolMaterial);
-	}
+    public boolean hasToolAction(Material toolMaterial) {
+        return this.toolActions.containsKey(toolMaterial);
+    }
 
-	@Nullable
-	public ToolAction getToolAction(Material toolMaterial) {
-		return this.toolActions.get(toolMaterial);
-	}
+    @Nullable
+    public ToolAction getToolAction(Material toolMaterial) {
+        return this.toolActions.get(toolMaterial);
+    }
 
-	public void removeToolAction(Material toolMaterial) {
-		this.toolActions.remove(toolMaterial);
-	}
+    public void removeToolAction(Material toolMaterial) {
+        this.toolActions.remove(toolMaterial);
+    }
 
-	public Brush useBrush(BrushProperties properties) {
-		Brush brush = getBrush(properties);
-		if (brush == null) {
-			brush = createBrush(properties);
-		}
-		this.previousBrushProperties = this.currentBrushProperties;
-		this.currentBrushProperties = properties;
-		return brush;
-	}
+    public Brush useBrush(BrushProperties properties) {
+        Brush brush = getBrush(properties);
+        if (brush == null) {
+            brush = createBrush(properties);
+        }
+        this.previousBrushProperties = this.currentBrushProperties;
+        this.currentBrushProperties = properties;
+        return brush;
+    }
 
-	private Brush createBrush(BrushProperties properties) {
-		BrushCreator creator = properties.getCreator();
-		Brush brush = creator.create();
-		this.brushes.put(properties, brush);
-		return brush;
-	}
+    private Brush createBrush(BrushProperties properties) {
+        BrushCreator creator = properties.getCreator();
+        Brush brush = creator.create();
+        this.brushes.put(properties, brush);
+        return brush;
+    }
 
-	@Nullable
-	public Brush getCurrentBrush() {
-		return getBrush(this.currentBrushProperties);
-	}
+    @Nullable
+    public Brush getCurrentBrush() {
+        return getBrush(this.currentBrushProperties);
+    }
 
-	@Nullable
-	public Brush getBrush(BrushProperties properties) {
-		return this.brushes.get(properties);
-	}
+    @Nullable
+    public Brush getBrush(BrushProperties properties) {
+        return this.brushes.get(properties);
+    }
 
-	public String getToolkitName() {
-		return this.toolkitName;
-	}
+    public String getToolkitName() {
+        return this.toolkitName;
+    }
 
-	public BrushProperties getCurrentBrushProperties() {
-		return this.currentBrushProperties;
-	}
+    public BrushProperties getCurrentBrushProperties() {
+        return this.currentBrushProperties;
+    }
 
-	public BrushProperties getPreviousBrushProperties() {
-		return this.previousBrushProperties;
-	}
+    public BrushProperties getPreviousBrushProperties() {
+        return this.previousBrushProperties;
+    }
 
-	public Map<Material, ToolAction> getToolActions() {
-		return Collections.unmodifiableMap(this.toolActions);
-	}
+    public Map<Material, ToolAction> getToolActions() {
+        return Collections.unmodifiableMap(this.toolActions);
+    }
 
-	public ToolkitProperties getProperties() {
-		return this.properties;
-	}
+    public ToolkitProperties getProperties() {
+        return this.properties;
+    }
+
 }

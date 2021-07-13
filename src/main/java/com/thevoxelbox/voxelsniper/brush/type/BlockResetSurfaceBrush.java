@@ -1,16 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 /**
  * This brush only looks for solid blocks, and then changes those plus any air blocks touching them. If it works, this brush should be faster than the original
@@ -27,80 +25,81 @@ import org.bukkit.block.data.BlockData;
  */
 public class BlockResetSurfaceBrush extends AbstractBrush {
 
-	private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
-		.with(Tag.DOORS)
-		.with(Tag.TRAPDOORS)
-		.with(MaterialSets.SIGNS)
-		.with(MaterialSets.CHESTS)
-		.with(MaterialSets.FENCE_GATES)
-		.with(MaterialSets.AIRS)
-		.add(Material.FURNACE)
-		.add(Material.REDSTONE_TORCH)
-		.add(Material.REDSTONE_WALL_TORCH)
-		.add(Material.REDSTONE_WIRE)
-		.add(Material.REPEATER)
-		.add(Material.COMPARATOR)
-		.build();
+    private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
+            .with(BlockCategories.DOORS)
+            .with(BlockCategories.TRAPDOORS)
+            .with(BlockCategories.SIGNS)
+            .with(MaterialSets.CHESTS)
+            .with(BlockCategories.FENCE_GATES)
+            .with(MaterialSets.AIRS)
+            .add(BlockTypes.FURNACE)
+            .add(BlockTypes.REDSTONE_TORCH)
+            .add(BlockTypes.REDSTONE_WALL_TORCH)
+            .add(BlockTypes.REDSTONE_WIRE)
+            .add(BlockTypes.REPEATER)
+            .add(BlockTypes.COMPARATOR)
+            .build();
 
-	@Override
-	public void handleArrowAction(Snipe snipe) {
-		applyBrush(snipe);
-	}
+    @Override
+    public void handleArrowAction(Snipe snipe) {
+        applyBrush(snipe);
+    }
 
-	@Override
-	public void handleGunpowderAction(Snipe snipe) {
-		applyBrush(snipe);
-	}
+    @Override
+    public void handleGunpowderAction(Snipe snipe) {
+        applyBrush(snipe);
+    }
 
-	private void applyBrush(Snipe snipe) {
-		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		int size = toolkitProperties.getBrushSize();
-		for (int x = -size; x <= size; x++) {
-			for (int y = -size; y <= size; y++) {
-				for (int z = -size; z <= size; z++) {
-					Block block = getBlockAtRelativeToTarget(x, y, z);
-					Material type = block.getType();
-					if (!DENIED_UPDATES.contains(type) && isAirAround(x, y, z)) {
-						resetBlock(block);
-					}
-				}
-			}
-		}
-	}
+    private void applyBrush(Snipe snipe) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        int size = toolkitProperties.getBrushSize();
+        for (int x = -size; x <= size; x++) {
+            for (int y = -size; y <= size; y++) {
+                for (int z = -size; z <= size; z++) {
+                    BlockState block = getBlockAtRelativeToTarget(x, y, z);
+                    if (!DENIED_UPDATES.contains(block) && isAirAround(x, y, z)) {
+                        resetBlock(x, y, z, block);
+                    }
+                }
+            }
+        }
+    }
 
-	private boolean isAirAround(int x, int y, int z) {
-		return findAir(x + 1, y, z) || findAir(x - 1, y, z) || findAir(x, y + 1, z) || findAir(x, y - 1, z) || findAir(x, y, z + 1) || findAir(x, y, z - 1);
-	}
+    private boolean isAirAround(int x, int y, int z) {
+        return findAir(x + 1, y, z) || findAir(x - 1, y, z) || findAir(x, y + 1, z) || findAir(x, y - 1, z) || findAir(
+                x,
+                y,
+                z + 1
+        ) || findAir(x, y, z - 1);
+    }
 
-	private boolean findAir(int x, int y, int z) {
-		Block block = getBlockAtRelativeToTarget(x, y, z);
-		if (!Materials.isEmpty(block.getType())) {
-			return false;
-		}
-		resetBlock(block);
-		return true;
-	}
+    private boolean findAir(int x, int y, int z) {
+        BlockState block = getBlockAtRelativeToTarget(x, y, z);
+        if (!block.isAir()) {
+            return false;
+        }
+        resetBlock(x, y, z, block);
+        return true;
+    }
 
-	private Block getBlockAtRelativeToTarget(int x, int y, int z) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
-		int targetBlockX = targetBlock.getX();
-		int targetBlockY = targetBlock.getY();
-		int targetBlockZ = targetBlock.getZ();
-		return world.getBlockAt(targetBlockX + x, targetBlockY + y, targetBlockZ + z);
-	}
+    private BlockState getBlockAtRelativeToTarget(int x, int y, int z) {
+        BlockVector3 targetBlock = getTargetBlock();
+        int targetBlockX = targetBlock.getX();
+        int targetBlockY = targetBlock.getY();
+        int targetBlockZ = targetBlock.getZ();
+        return getBlock(targetBlockX + x, targetBlockY + y, targetBlockZ + z);
+    }
 
-	private void resetBlock(Block block) {
-		BlockData oldData = block.getBlockData();
-		Material type = block.getType();
-		BlockData defaultData = type.createBlockData();
-		block.setBlockData(defaultData);
-		block.setBlockData(oldData);
-	}
+    private void resetBlock(int x, int y, int z, BlockState block) {
+        BlockState defaultData = block.getBlockType().getDefaultState();
+        setBlockData(x, y, z, defaultData);
+        setBlockData(x, y, z, block);
+    }
 
-	@Override
-	public void sendInfo(Snipe snipe) {
-		SnipeMessenger messenger = snipe.createMessenger();
-		messenger.sendBrushNameMessage();
-	}
+    @Override
+    public void sendInfo(Snipe snipe) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendBrushNameMessage();
+    }
+
 }

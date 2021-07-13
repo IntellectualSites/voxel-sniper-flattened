@@ -16,38 +16,39 @@ import org.bukkit.entity.Player;
 
 public class PerformerExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+    private final VoxelSniperPlugin plugin;
 
-	public PerformerExecutor(VoxelSniperPlugin plugin) {
-		this.plugin = plugin;
-	}
+    public PerformerExecutor(VoxelSniperPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-		Player player = (Player) sender;
-		Sniper sniper = sniperRegistry.getSniper(player);
-		if (sniper == null) {
-			return;
-		}
-		Toolkit toolkit = sniper.getCurrentToolkit();
-		if (toolkit == null) {
-			return;
-		}
-		ToolkitProperties toolkitProperties = toolkit.getProperties();
-		if (toolkitProperties == null) {
-			return;
-		}
-		BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
-		Brush brush = toolkit.getCurrentBrush();
-		if (!(brush instanceof PerformerBrush)) {
-			sender.sendMessage("This brush is not a performer brush.");
-			return;
-		}
-		PerformerBrush performer = (PerformerBrush) brush;
-		String[] parameters = arguments.length == 0 ? new String[] {"m"} : arguments;
-		Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
-		PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
-		performer.handlePerformerCommand(parameters, snipe, performerRegistry);
-	}
+    @Override
+    public void executeCommand(CommandSender sender, String[] arguments) {
+        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
+        Player player = (Player) sender;
+        Sniper sniper = sniperRegistry.getSniper(player);
+        if (sniper == null) {
+            return;
+        }
+        Toolkit toolkit = sniper.getCurrentToolkit();
+        if (toolkit == null) {
+            return;
+        }
+        ToolkitProperties toolkitProperties = toolkit.getProperties();
+        if (toolkitProperties == null) {
+            return;
+        }
+        BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
+        Brush brush = toolkit.getCurrentBrush();
+        if (!(brush instanceof PerformerBrush)) {
+            sender.sendMessage("This brush is not a performer brush.");
+            return;
+        }
+        PerformerBrush performer = (PerformerBrush) brush;
+        String[] parameters = arguments.length == 0 ? new String[]{"m"} : arguments;
+        Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
+        PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
+        performer.handlePerformerCommand(parameters, snipe, performerRegistry);
+    }
+
 }

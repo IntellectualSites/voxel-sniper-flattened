@@ -15,39 +15,40 @@ import java.util.stream.Collectors;
 
 public class PaintExecutor implements CommandExecutor, TabCompleter {
 
-	private static final List<String> ART_NAMES = Arrays.stream(Art.values())
-		.map(Art::name)
-		.map(String::toLowerCase)
-		.collect(Collectors.toList());
+    private static final List<String> ART_NAMES = Arrays.stream(Art.values())
+            .map(Art::name)
+            .map(String::toLowerCase)
+            .collect(Collectors.toList());
 
-	@Override
-	public void executeCommand(CommandSender sender, String[] arguments) {
-		Player player = (Player) sender;
-		if (arguments.length == 1) {
-			if (arguments[0].equalsIgnoreCase("back")) {
-				ArtHelper.paintAuto(player, true);
-			} else {
-				Art art = Art.getByName(arguments[0]);
-				if (art == null) {
-					sender.sendMessage(ChatColor.RED + "Invalid art name.");
-					return;
-				}
-				ArtHelper.paint(player, art);
-			}
-		} else {
-			ArtHelper.paintAuto(player, false);
-		}
-	}
+    @Override
+    public void executeCommand(CommandSender sender, String[] arguments) {
+        Player player = (Player) sender;
+        if (arguments.length == 1) {
+            if (arguments[0].equalsIgnoreCase("back")) {
+                ArtHelper.paintAuto(player, true);
+            } else {
+                Art art = Art.getByName(arguments[0]);
+                if (art == null) {
+                    sender.sendMessage(ChatColor.RED + "Invalid art name.");
+                    return;
+                }
+                ArtHelper.paint(player, art);
+            }
+        } else {
+            ArtHelper.paintAuto(player, false);
+        }
+    }
 
-	@Override
-	public List<String> complete(CommandSender sender, String[] arguments) {
-		if (arguments.length == 1) {
-			String argument = arguments[0];
-			String argumentLowered = argument.toLowerCase();
-			return ART_NAMES.stream()
-				.filter(artName -> artName.startsWith(argumentLowered))
-				.collect(Collectors.toList());
-		}
-		return Collections.emptyList();
-	}
+    @Override
+    public List<String> complete(CommandSender sender, String[] arguments) {
+        if (arguments.length == 1) {
+            String argument = arguments[0];
+            String argumentLowered = argument.toLowerCase();
+            return ART_NAMES.stream()
+                    .filter(artName -> artName.startsWith(argumentLowered))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
 }

@@ -1,28 +1,29 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
-import org.bukkit.Material;
+import com.sk89q.worldedit.world.block.BlockType;
 import org.jetbrains.annotations.Nullable;
 
 class CommonMaterial {
 
-	@Nullable
-	private Material material;
-	private int frequency;
+    @Nullable
+    private BlockType type;
+    private int frequency;
 
-	@Nullable
-	public Material getMaterial() {
-		return this.material;
-	}
+    @Nullable
+    public BlockType getBlockType() {
+        return this.type;
+    }
 
-	public void setMaterial(@Nullable Material material) {
-		this.material = material;
-	}
+    public void setBlockType(@Nullable BlockType type) {
+        this.type = type;
+    }
 
-	public int getFrequency() {
-		return this.frequency;
-	}
+    public int getFrequency() {
+        return this.frequency;
+    }
 
-	public void setFrequency(int frequency) {
-		this.frequency = frequency;
-	}
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
+    }
+
 }

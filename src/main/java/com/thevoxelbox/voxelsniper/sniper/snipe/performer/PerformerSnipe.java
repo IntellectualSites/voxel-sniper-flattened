@@ -14,42 +14,59 @@ import org.bukkit.entity.Player;
 
 public class PerformerSnipe extends Snipe {
 
-	private PerformerProperties performerProperties;
-	private Performer performer;
+    private final PerformerProperties performerProperties;
+    private final Performer performer;
 
-	public PerformerSnipe(Snipe snipe, PerformerProperties performerProperties, Performer performer) {
-		this(snipe.getSniper(), snipe.getToolkit(), snipe.getToolkitProperties(), snipe.getBrushProperties(), snipe.getBrush(), performerProperties, performer);
-	}
+    public PerformerSnipe(Snipe snipe, PerformerProperties performerProperties, Performer performer) {
+        this(
+                snipe.getSniper(),
+                snipe.getToolkit(),
+                snipe.getToolkitProperties(),
+                snipe.getBrushProperties(),
+                snipe.getBrush(),
+                performerProperties,
+                performer
+        );
+    }
 
-	public PerformerSnipe(Sniper sniper, Toolkit toolkit, ToolkitProperties toolkitProperties, BrushProperties brushProperties, Brush brush, PerformerProperties performerProperties, Performer performer) {
-		super(sniper, toolkit, toolkitProperties, brushProperties, brush);
-		this.performerProperties = performerProperties;
-		this.performer = performer;
-	}
+    public PerformerSnipe(
+            Sniper sniper,
+            Toolkit toolkit,
+            ToolkitProperties toolkitProperties,
+            BrushProperties brushProperties,
+            Brush brush,
+            PerformerProperties performerProperties,
+            Performer performer
+    ) {
+        super(sniper, toolkit, toolkitProperties, brushProperties, brush);
+        this.performerProperties = performerProperties;
+        this.performer = performer;
+    }
 
-	@Override
-	public PerformerSnipeMessenger createMessenger() {
-		ToolkitProperties toolkitProperties = getToolkitProperties();
-		BrushProperties brushProperties = getBrushProperties();
-		Sniper sniper = getSniper();
-		Player player = sniper.getPlayer();
-		return new PerformerSnipeMessenger(toolkitProperties, brushProperties, this.performerProperties, player);
-	}
+    @Override
+    public PerformerSnipeMessenger createMessenger() {
+        ToolkitProperties toolkitProperties = getToolkitProperties();
+        BrushProperties brushProperties = getBrushProperties();
+        Sniper sniper = getSniper();
+        Player player = sniper.getPlayer();
+        return new PerformerSnipeMessenger(toolkitProperties, brushProperties, this.performerProperties, player);
+    }
 
-	@Override
-	public PerformerSnipeMessageSender createMessageSender() {
-		ToolkitProperties toolkitProperties = getToolkitProperties();
-		BrushProperties brushProperties = getBrushProperties();
-		Sniper sniper = getSniper();
-		Player player = sniper.getPlayer();
-		return new PerformerSnipeMessageSender(toolkitProperties, brushProperties, this.performerProperties, player);
-	}
+    @Override
+    public PerformerSnipeMessageSender createMessageSender() {
+        ToolkitProperties toolkitProperties = getToolkitProperties();
+        BrushProperties brushProperties = getBrushProperties();
+        Sniper sniper = getSniper();
+        Player player = sniper.getPlayer();
+        return new PerformerSnipeMessageSender(toolkitProperties, brushProperties, this.performerProperties, player);
+    }
 
-	public PerformerProperties getPerformerProperties() {
-		return this.performerProperties;
-	}
+    public PerformerProperties getPerformerProperties() {
+        return this.performerProperties;
+    }
 
-	public Performer getPerformer() {
-		return this.performer;
-	}
+    public Performer getPerformer() {
+        return this.performer;
+    }
+
 }

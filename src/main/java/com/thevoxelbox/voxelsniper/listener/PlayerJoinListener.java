@@ -12,38 +12,38 @@ import java.util.UUID;
 
 public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 
-	private VoxelSniperPlugin plugin;
+    private final VoxelSniperPlugin plugin;
 
-	public PlayerJoinListener(VoxelSniperPlugin plugin) {
-		this.plugin = plugin;
-	}
+    public PlayerJoinListener(VoxelSniperPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler
-	@Override
-	public void listen(PlayerJoinEvent event) {
-		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		Player player = event.getPlayer();
-		UUID uuid = player.getUniqueId();
-		Sniper sniper = getSniperFromRegistry(uuid);
-		if (config.isMessageOnLoginEnabled() && player.hasPermission("voxelsniper.sniper")) {
-			sniper.sendInfo(player);
-		}
-	}
+    @EventHandler
+    @Override
+    public void listen(PlayerJoinEvent event) {
+        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        Sniper sniper = getSniperFromRegistry(uuid);
+        if (config.isMessageOnLoginEnabled() && player.hasPermission("voxelsniper.sniper")) {
+            sniper.sendInfo(player);
+        }
+    }
 
-	private Sniper getSniperFromRegistry(UUID uuid) {
-		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-		Sniper sniper = sniperRegistry.getSniper(uuid);
-		if (sniper == null) {
-			return registerNewSniper(uuid, sniperRegistry);
-		}
-		return sniper;
-	}
+    private Sniper getSniperFromRegistry(UUID uuid) {
+        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
+        Sniper sniper = sniperRegistry.getSniper(uuid);
+        if (sniper == null) {
+            return registerNewSniper(uuid, sniperRegistry);
+        }
+        return sniper;
+    }
 
-	private Sniper registerNewSniper(UUID uuid, SniperRegistry sniperRegistry) {
-		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		int undoCacheSize = config.getUndoCacheSize();
-		Sniper newSniper = new Sniper(uuid, undoCacheSize);
-		sniperRegistry.register(newSniper);
-		return newSniper;
-	}
+    private Sniper registerNewSniper(UUID uuid, SniperRegistry sniperRegistry) {
+        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
+        Sniper newSniper = new Sniper(uuid);
+        sniperRegistry.register(newSniper);
+        return newSniper;
+    }
+
 }

@@ -19,9 +19,9 @@ assignees: ''
 <!--- If you are unwilling to supply the information we need, we reserve the right to not assist you. Redact IP addresses if you need to. -->
 
 **Required Information**
-- FAVS Version Number (`/version VoxelSniper`):
+- FAVS Version Number (`/version FastAsyncVoxelSniper`):
 - Spigot/Paper Version Number (`/version`):
-- Minecraft Version: [e.g. 1.16.4]
+- Output of `/version`: 
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -40,5 +40,5 @@ Steps to reproduce the behavior:
 <!--- Make sure you've completed the following steps (put an "X" between of brackets): -->
 - [] I included all information required in the sections above
 - [] I made sure there are no duplicates of this report [(Use Search)](https://github.com/IntellectualSites/voxel-sniper-flattened/issues?q=is%3Aissue)
-- [] I made sure I am using an up-to-date version of [FastAsyncVoxelSniper for 1.16.4](https://ci.athion.net/job/FastAsyncVoxelSniper-flattening/)
+- [] I made sure I am using an up-to-date version of [FastAsyncVoxelSniper](https://ci.athion.net/job/FastAsyncVoxelSniper-flattening/)
 - [] I made sure the bug/error is not caused by any other plugin

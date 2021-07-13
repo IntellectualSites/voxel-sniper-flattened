@@ -4,9 +4,10 @@ import com.sk89q.worldedit.math.BlockVector3;
 
 public interface Painter {
 
-	void paint();
+    void paint();
 
-	BlockVector3 getCenter();
+    BlockVector3 getCenter();
 
-	BlockSetter getBlockSetter();
+    BlockSetter getBlockSetter();
+
 }

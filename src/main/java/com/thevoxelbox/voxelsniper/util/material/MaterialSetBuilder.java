@@ -1,57 +1,68 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
-import org.bukkit.Material;
-import org.bukkit.Tag;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockCategory;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class MaterialSetBuilder {
 
-	private List<Material> materials = new ArrayList<>(1);
+    private final List<BlockType> blockTypes = new ArrayList<>(1);
 
-	public MaterialSetBuilder add(Material material) {
-		this.materials.add(material);
-		return this;
-	}
+    public MaterialSetBuilder add(BlockType blockType) {
+        this.blockTypes.add(blockType);
+        return this;
+    }
 
-	public MaterialSetBuilder with(Material... materials) {
-		List<Material> list = Arrays.asList(materials);
-		this.materials.addAll(list);
-		return this;
-	}
+    public MaterialSetBuilder add(String blockType) {
+        BlockType optionalBlockType = BlockTypes.get(blockType.toLowerCase(Locale.ROOT));
+        if (optionalBlockType != null) {
+            this.blockTypes.add(optionalBlockType);
+        }
+        return this;
+    }
 
-	public MaterialSetBuilder with(Collection<Material> materials) {
-		this.materials.addAll(materials);
-		return this;
-	}
+    public MaterialSetBuilder with(BlockType... blockTypes) {
+        List<BlockType> list = Arrays.asList(blockTypes);
+        this.blockTypes.addAll(list);
+        return this;
+    }
 
-	public MaterialSetBuilder with(MaterialSet materialSet) {
-		Set<Material> materials = materialSet.getMaterials();
-		this.materials.addAll(materials);
-		return this;
-	}
+    public MaterialSetBuilder with(Collection<BlockType> materials) {
+        this.blockTypes.addAll(materials);
+        return this;
+    }
 
-	public MaterialSetBuilder with(Tag<Material> tag) {
-		Set<Material> materials = tag.getValues();
-		this.materials.addAll(materials);
-		return this;
-	}
+    public MaterialSetBuilder with(MaterialSet materialSet) {
+        Set<BlockType> materials = materialSet.getBlockTypes();
+        this.blockTypes.addAll(materials);
+        return this;
+    }
 
-	public MaterialSetBuilder filtered(Predicate<? super Material> filter) {
-		List<Material> materials = Arrays.stream(Material.values())
-			.filter(filter)
-			.collect(Collectors.toList());
-		this.materials.addAll(materials);
-		return this;
-	}
+    public MaterialSetBuilder with(BlockCategory blockCategory) {
+        Set<BlockType> blockTypes = blockCategory.getAll();
+        this.blockTypes.addAll(blockTypes);
+        return this;
+    }
 
-	public MaterialSet build() {
-		return new MaterialSet(this.materials);
-	}
+    public MaterialSetBuilder with(String blockCategory) {
+        BlockCategory optionalBlockCategory = BlockCategories.get(blockCategory.toLowerCase(Locale.ROOT));
+        if (optionalBlockCategory != null) {
+            Set<BlockType> blockTypes = optionalBlockCategory.getAll();
+            this.blockTypes.addAll(blockTypes);
+        }
+        return this;
+    }
+
+    public MaterialSet build() {
+        return new MaterialSet(this.blockTypes);
+    }
+
 }

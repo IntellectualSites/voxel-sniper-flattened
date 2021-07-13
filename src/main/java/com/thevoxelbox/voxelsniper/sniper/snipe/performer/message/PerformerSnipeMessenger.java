@@ -9,16 +9,22 @@ import org.bukkit.entity.Player;
 
 public class PerformerSnipeMessenger extends SnipeMessenger {
 
-	private PerformerProperties performerProperties;
+    private final PerformerProperties performerProperties;
 
-	public PerformerSnipeMessenger(ToolkitProperties toolkitProperties, BrushProperties brushProperties, PerformerProperties performerProperties, Player player) {
-		super(toolkitProperties, brushProperties, player);
-		this.performerProperties = performerProperties;
-	}
+    public PerformerSnipeMessenger(
+            ToolkitProperties toolkitProperties,
+            BrushProperties brushProperties,
+            PerformerProperties performerProperties,
+            Player player
+    ) {
+        super(toolkitProperties, brushProperties, player);
+        this.performerProperties = performerProperties;
+    }
 
-	public void sendPerformerNameMessage() {
-		Messenger messenger = getMessenger();
-		String performerName = this.performerProperties.getName();
-		messenger.sendPerformerNameMessage(performerName);
-	}
+    public void sendPerformerNameMessage() {
+        Messenger messenger = getMessenger();
+        String performerName = this.performerProperties.getName();
+        messenger.sendPerformerNameMessage(performerName);
+    }
+
 }

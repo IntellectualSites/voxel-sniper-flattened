@@ -4,5 +4,6 @@ import org.bukkit.command.CommandSender;
 
 public interface CommandExecutor {
 
-	void executeCommand(CommandSender sender, String[] arguments);
+    void executeCommand(CommandSender sender, String[] arguments);
+
 }

@@ -1,1 +1,1 @@
-rootProject.name = "FastAsyncVoxelSniper-flattened"
+rootProject.name = "FastAsyncVoxelSniper"
