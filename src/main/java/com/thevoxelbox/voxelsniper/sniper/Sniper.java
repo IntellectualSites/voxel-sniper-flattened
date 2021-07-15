@@ -9,6 +9,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
@@ -21,7 +22,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.FluidCollisionMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -197,9 +196,9 @@ public class Sniper {
                                 Bukkit.getViewDistance(),
                                 3
                         ) * 16 - toolkitProperties.getBrushSize() : toolkitProperties.getBlockTracerRange();
-                        RayTraceResult rayTraceResult = player.rayTraceBlocks(distance, FluidCollisionMode.ALWAYS);
-                        if (rayTraceResult != null && rayTraceResult.getHitBlock() != null) {
-                            rayTraceBlock = BukkitAdapter.asBlockVector(rayTraceResult.getHitBlock().getLocation());
+                        Location rayTraceResult = fp.getBlockTrace(distance, true);
+                        if (rayTraceResult != null) {
+                            rayTraceBlock = rayTraceResult.toBlockPoint();
                         }
                     }
                 }
@@ -266,11 +265,12 @@ public class Sniper {
                     return false;
                 } else {
                     if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                        if (BukkitAdapter.adapt(editSession.getBlockType(
-                                targetBlock.getX(),
-                                targetBlock.getY(),
-                                targetBlock.getZ()
-                        )).isEmpty()) {
+                        if (targetBlock.getY() != editSession.getMinY() &&
+                                BukkitAdapter.adapt(editSession.getBlockType(
+                                        targetBlock.getX(),
+                                        targetBlock.getY(),
+                                        targetBlock.getZ()
+                                )).isEmpty()) {
                             player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                             return true;
                         }

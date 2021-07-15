@@ -4,8 +4,10 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.TreeGenerator;
+import com.sk89q.worldedit.world.RegenOptions;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -91,11 +93,24 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    public void regenerateChunk(int chunkX, int chunkZ) {
+    public boolean regenerateChunk(int chunkX, int chunkZ) {
         try {
             World world = BukkitAdapter.adapt(editSession.getWorld());
-            editSession.regenerateChunk(chunkX, chunkZ, editSession.getBiomeType(chunkX << 4, 0, chunkZ << 4),
-                    world.getSeed()
+            int minX = chunkX << 4;
+            int minZ = chunkZ << 4;
+            RegenOptions regenOptions = RegenOptions.builder()
+                    .seed(world.getSeed())
+                    .regenBiomes(true)
+                    .biomeType(null)
+                    .build();
+            return editSession.getWorld().regenerate(
+                    new CuboidRegion(
+                            editSession.getWorld(),
+                            BlockVector3.at(minX, editSession.getMinY(), minZ),
+                            BlockVector3.at(minX + 15, editSession.getMaxY(), minZ + 15)
+                    ),
+                    editSession,
+                    regenOptions
             );
         } catch (WorldEditException e) {
             throw new RuntimeException(e);

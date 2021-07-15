@@ -25,8 +25,12 @@ public class RegenerateChunkBrush extends AbstractBrush {
         int chunkX = targetBlock.getX() >> 4;
         int chunkZ = targetBlock.getZ() >> 4;
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage("Generate that chunk! " + chunkX + " " + chunkZ);
-        regenerateChunk(chunkX, chunkZ);
+        messenger.sendMessage("Generating that chunk! " + chunkX + " " + chunkZ);
+        if (regenerateChunk(chunkX, chunkZ)) {
+            messenger.sendMessage(ChatColor.GREEN + "Successfully generated that chunk! " + chunkX + " " + chunkZ);
+        } else {
+            messenger.sendMessage(ChatColor.RED + "Failed to generate that chunk! " + chunkX + " " + chunkZ);
+        }
     }
 
     @Override
